@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Campgrounds</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.2/css/all.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="/stylesheets/main.css">
+    <script src="https://code.jquery.com/jquery-git2.min.js"></script>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+            <button class="navbar-toggler m1-auto" type="button" data-toggle="collapse" data-target="#navLinks" aria-label="Toggle Navigation">
+              <span class="navbar-toggler-icon my-toggler"></span>
+            </button>
+            <div class="navbar-collapse collapse" id="navLinks">
+              <a class="navbar-brand" href="/campgrounds"><i class="fa fa-camp"></i>Campgrounds</a>
+              <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                  <a class="nav-link" href="/">Home<span class="sr-only">(current)</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/">About</a>
+                </li>                
+              </ul>
+            </div>
+            <div container="logininfo">
+              <ul class="navbar-nav mr-auto navbar-expand-sm flex-row">
+                <% if(!currentUser){ %>
+                <li><a class="nav-item nav-link m-1" href="/register"><i class="fas fa-user-plus"></i> Sign Up</a></li>
+                <li><a class="nav-item nav-link m-1" href="/login"><i class="fa fa-user"></i> Login</a></li>             
+                <% } else { %>                
+                  <li><a class="nav-item nav-link m-1" href="#">Hello, <%= currentUser.username %></a></li>
+                  <li><a class="nav-item nav-link m-1" href="/logout">
+                    <i class=""></i> Logout</a></li>
+                  <% } %>
+              </ul>
+      </div>      
+    </nav>
+    <div class="container mt-3">
+       <% if(error && error.length > 0) { %>
+         <div class="alert alert-danger"><%=error %></div>
+       <% } %>
+       
+       <% if(success && success.length > 0) { %>
+         <div class="alert alert-success"><%= success %></div>
+       <% } %>
+    </div>
+    <div class="container">
