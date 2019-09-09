@@ -1,3 +1,5 @@
+//Author: Chris White - refractor of the readme will come
+
 // Update
 sudo apt-get update
 
