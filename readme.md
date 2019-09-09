@@ -90,3 +90,10 @@ Issue 1 -- https://stackoverflow.com/questions/41533926/mongoose-typeerror-hex-i
 Link - Deployed:
 https://shielded-thicket-43768.herokuapp.com/ 
 
+// common git
+git add routes/campgrounds.js
+git commit -m "Campground price bug -- not saving"
+[master 7b3986d] Campground price bug -- not saving
+
+git push heroku master
+
