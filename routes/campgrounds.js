@@ -66,7 +66,7 @@ router.get("/:id/edit", middleware.checkUserCampground, function(req, res){
 });
 
 router.put("/:id", function(req, res){
-    var newData = {name: req.body.name, image: req.body.image, description: req.body.description};
+    var newData = {name: req.body.name, image: req.body.image, price: req.body.price, description: req.body.description};
     Campground.findByIdAndUpdate(req.params.id, {$set: newData}, function(err, campground){
         if(err){
             req.flash("error", err.message);
