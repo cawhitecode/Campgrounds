@@ -1,0 +1,179 @@
+<% include ../partials/header %>
+<div class="container">
+  <div class="row">
+    <div class="col-md-3">
+      <p class="lead">Camp</p>
+      <div class="list-class">
+        <li class="list-group-item active">Info 1</li>
+        <li class="list-group-item">Info 2</li>
+        <li class="list-group-item">Info 3</li>
+      </div>
+    </div>
+    <div class="col-md-9">
+      <div class="col-md-22 col-sm-6">
+        <div class="img-fluid img-thumbnail">
+          <img style="width: 100%; height: 100%;" src="<%= campground.image %>">
+          <div class="caption">
+            <h3 class="pull-right">$9.00/night</h3>
+            <h3><a><%= campground.name %></a></h3>
+            <h3><%= campground.description %></h3>
+          </div>
+          <div class="well">
+            <div class="text-right">
+              <a class="btn btn-success" href="/campgrounds/<%= campground._id %>/comments/new">Add New Comment</a>
+            </div>
+            <hr>
+            <div>
+            <% campground.comments.forEach(funtion(comment){ %>
+              <div class="row">
+                <div class="col-md-12">
+                  <strong><%= comment.author %></strong>
+                  <span class="pull-right">10 days ago</span>
+                  <%= comment.text %>
+                </div>
+              </div>                         
+          </div>
+         <% }) %>
+        </div>
+       </div>         
+      </div>
+    </div>
+  </div>
+</div>
+
+<% include ../partials/footer %>
+
+
+
+
+
+
+
+app.get("/", function(req, res){
+  res.render("landing");
+});
+
+// different campgrounds from DB
+app.get("/campgrounds", function(req, res){
+  Campground.find({}, function(err, dbCampgrounds){
+    if(err){
+      console.log(err);
+    } else {
+      res.render("campgrounds/index", {campgrounds:dbCampgrounds})
+    }
+  })
+});
+
+// New camp ground post to DataBase
+app.post("/campgrounds", function(req, res){
+  // Get data and add to campgrounds DB 
+  var name = req.body.name;
+  var image = req.body.image;
+  var description = req.body.description;
+  var newCampground = {name: name, image: image, description: description};
+  
+  // Create and Save campground to DB
+  Campground.create(newCampground, function(err, newlyCreated){
+    if(err){
+      console.log(err);
+    } else {
+      // Redirect back to campgrounds
+      res.redirect("/campgrounds")
+    }
+  })
+});
+
+// campgrounds/New Route
+app.get("/campgrounds/new", function(req, res){
+  res.render("campgrounds/new");
+})
+
+// shows more info about one campground selected
+app.get("/campgrounds/:id", function(req, res){
+  //res.send("show page!");
+  //find the campground with provided ID
+  var uid = mongoose.Types.ObjectId(req.params.id);
+  Campground.findById(uid).populate("comments").exec(function(err, foundCampground){
+    if(err){       
+      console.log(err)
+      res.redirect("/campgrounds");
+     } else {
+       //render show template with that campground
+       console.log(foundCampground)
+       res.render("campgrounds/show", {campground: foundCampground});       
+     }
+ });
+});
+
+app.get("/campgrounds/:id/comments/new", function(req, res){
+  // find campground by ID
+  Campground.findById(req.params.id, function(err, campground){
+    if(err){
+      console.log(err);
+    } else {
+      res.render("comments/new", {campground: campground});
+    }
+  })
+});
+
+app.post("")
+
+
+
+var express = require("express");
+var router  = express.Router();
+var passport = require("passport");
+var User = require("../models/user");
+
+//root route
+router.get("/", function(req, res){
+    res.render("landing");
+});
+
+// show register form
+router.get("/register", function(req, res){
+   res.render("register"); 
+});
+
+//handle sign up logic
+router.post("/register", function(req, res){
+    var newUser = new User({username: req.body.username});
+    User.register(newUser, req.body.password, function(err, user){
+        if(err){
+            console.log(err);
+            return res.render("register");
+        }
+        passport.authenticate("local")(req, res, function(){
+           res.redirect("/campgrounds"); 
+        });
+    });
+});
+
+//show login form
+router.get("/login", function(req, res){
+   res.render("login"); 
+});
+
+//handling login logic
+router.post("/login", passport.authenticate("local", 
+    {
+        successRedirect: "/campgrounds",
+        failureRedirect: "/login"
+    }), function(req, res){
+});
+
+// logout route
+router.get("/logout", function(req, res){
+   req.logout();
+   res.redirect("/campgrounds");
+});
+
+//middleware
+function isLoggedIn(req, res, next){
+    if(req.isAuthenticated()){
+        return next();
+    }
+    res.redirect("/login");
+}
+
+module.exports = router;

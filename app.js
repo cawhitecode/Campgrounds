@@ -19,7 +19,14 @@ var commentRoutes    = require("./routes/comments"),
     indexRoutes      = require("./routes/index")
 
 // moongoose DB connection
-mongoose.connect("mongodb://localhost:27018/campgounds_app", {useNewUrlParser: true});
+//}).then(() => {
+//  console.log('Connected to DB!');
+//}).catch(err => {
+ //console.log('Error:', err.message);
+//})
+mongoose.connect('mongodb+srv://minig77:rOllOut77@campgrounds-8su9n.mongodb.net/test?retryWrites=true&w=majority');
+//mongoose.connect('mongodb+srv://minig77:<rOllOut77>@campgrounds-8su9n.mongodb.net/test?retryWrites=true&w=majority'
+//mongoose.connect("mongodb://localhost:27018/campgounds_app", {useNewUrlParser: true});
 app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
 app.use(express.static(__dirname + "/public"));
